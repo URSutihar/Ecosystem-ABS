@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Model Documentation &amp; Programming — Ecosystem ABM (SMA 40.015)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="../3_Project Management/styles/pm.css">
+  <link rel="stylesheet" href="styles/md.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="pm-header">
+    <div class="pm-title">
+      <h1>Model Documentation &amp; Programming</h1>
+      <p class="subtitle">Ecosystem ABM — Generalists vs Specialists · Project 16</p>
+      <span class="course">40.015 Simulation Modeling &amp; Analysis</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0;margin-left:auto;">
+      <img class="pm-sutd-logo" src="../3_Project Management/images/SUTD.webp" alt="SUTD">
+      <div class="pm-instructor pm-team" id="instructor-strip"><!-- filled by dc_render.js --></div>
+    </div>
+  </header>
+
+  <section class="md-hero">
+    <p class="md-hero-lead">
+      This page deck provides a comprehensive explanation of the Viridian-7 Ecosystem Agent Based Simulation (ABS) Model.
+      The objective of this model is to simulate the predator-prey dynamic in an environment with competition and shocks,
+      capturing the optimal strategy for survival.
+      </br>
+      The model accounts for multiple ecosystems with differnet prey and predator types, dynamic species behaviour,
+      random shocks, reproduction and starvation.
+    </p>
+  </section>
+
+  <div class="dc-pipeline">
+    <div id="pipeline"><!-- filled by dc_render.js --></div>
+    <p class="dc-pipeline-label">How hypothetical input data flows into the simulation</p>
+  </div>
+
+  <p class="dc-section-heading">Parameter Assumptions — 6 sections</p>
+  <div id="sections"><!-- filled by dc_render.js --></div>
+
+  <div class="pm-footer">
+    Model documentation &amp; programming · <code>6_Model Documentation and Programming/</code> ·
+    Utkarsh Raj Suthihar · Ye Xinyu · Jiang Yuqing · Jolie Chua
+  </div>
+
+</div>
+
+<div id="avatar-popover" class="avatar-popover"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="lib/md_narrative.js"></script>
+<script src="../4_Data Collection and Manipulation/lib/dc_data.js"></script>
+<script src="../4_Data Collection and Manipulation/lib/dc_render.js"></script>
+<script src="../video-preload.js"></script>
+
+<!-- ── Page nav ── -->
+<a href="../5_Simulation Design/simulation_design.html" class="nav-prev-btn" title="Simulation Design">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+  Prev
+</a>
+<a href="../7_User Interface Visualization and Animation/ecosystem.html" class="nav-next-btn" title="Simulation">
+  Next
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+</a>
+<style>
+.nav-next-btn, .nav-prev-btn {
+  position: fixed;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.38);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  z-index: 9999;
+}
+.nav-next-btn { right: 28px; background: var(--accent, #60a5fa); color: #fff; padding: 10px 20px 10px 18px; }
+.nav-prev-btn { left: 28px; background: var(--bg-card, #1e2432); color: var(--text-muted, #8899af); border: 1px solid var(--border, #2a3244); padding: 10px 18px 10px 16px; }
+.nav-next-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(0,0,0,0.48); text-decoration: none; }
+.nav-prev-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(0,0,0,0.38); text-decoration: none; color: var(--text, #e2e8f0); }
+</style>
+
+</body>
+</html>

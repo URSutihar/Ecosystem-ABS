@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Promo Video — Ecosystem ABM (SMA 40.015)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../3_Project Management/styles/pm.css">
+  <style>
+    .video-page { max-width: 980px; margin: 0 auto; }
+    .video-intro { color: var(--text-muted); font-size: 0.88rem; line-height: 1.65; margin: 0 0 22px; }
+    .video-frame {
+      width: 100%; aspect-ratio: 16 / 9; display: block; border: 1px solid var(--border);
+      border-radius: 12px; background: #000; box-shadow: 0 16px 42px rgba(0, 0, 0, 0.32);
+    }
+    .nav-prev-btn {
+      position: fixed; bottom: 28px; left: 28px; display: flex; align-items: center; gap: 7px;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+      text-decoration: none; background: var(--bg-card, #1e2432); color: var(--text-muted, #8899af);
+      border: 1px solid var(--border, #2a3244); padding: 10px 18px 10px 16px; border-radius: 999px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.38); transition: transform 0.15s ease, box-shadow 0.15s ease; z-index: 9999;
+    }
+    .nav-prev-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(0,0,0,0.38); text-decoration: none; color: var(--text, #e2e8f0); }
+    @media (max-width: 700px) { .nav-prev-btn { bottom: 16px; left: 16px; } }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header class="pm-header">
+    <div class="pm-title">
+      <h1>Promo Video</h1>
+      <p class="subtitle">Ecosystem ABM · Generalists vs Specialists</p>
+      <span class="course">40.015 Simulation Modeling &amp; Analysis</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0;margin-left:auto;">
+      <img class="pm-sutd-logo" src="../3_Project Management/images/SUTD.webp" alt="SUTD">
+      <div class="pm-instructor pm-team" id="instructor-strip"></div>
+    </div>
+  </header>
+
+  <main class="video-page">
+    <p class="video-intro">Project 16 promotional video.</p>
+    <iframe
+      class="video-frame"
+      src="https://www.youtube.com/embed/8UI1SmC0qhY?rel=0"
+      title="Ecosystem ABM promotional video"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen></iframe>
+  </main>
+
+  <div class="pm-footer">
+    Promo Video · <code>9_Promo Video/</code> ·
+    Utkarsh Raj Suthihar · Ye Xinyu · Jiang Yuqing · Jolie Chua
+  </div>
+</div>
+
+<div id="avatar-popover" class="avatar-popover"></div>
+<script src="../3_Project Management/lib/pm_data.js"></script>
+<script>TEAM_IMG_PATH = '../3_Project Management/images/team/';</script>
+<script src="../3_Project Management/lib/pm_render.js"></script>
+
+<a href="../8_Output Analysis/output_analysis.html" class="nav-prev-btn" title="Output Analysis">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+  Prev
+</a>
+</body>
+</html>

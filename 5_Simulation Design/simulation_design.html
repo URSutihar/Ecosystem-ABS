@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulation Design — Ecosystem ABM (SMA 40.015)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="../3_Project Management/styles/pm.css">
+
+  <style>
+    /* ── Diagram container ─────────────────────────────────────── */
+    /* Sits outside .wrap so it bleeds to full viewport width       */
+    .sd-diagram-outer {
+      width: auto;
+      margin: 0 20px 44px;
+      height: 74vh;
+      min-height: 440px;
+      overflow: hidden;
+      position: relative;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: grab;
+      user-select: none;
+    }
+    .sd-diagram-outer:active { cursor: grabbing; }
+
+    #diagram-inner {
+      position: absolute;
+      top: 0; left: 0;
+      transform-origin: 0 0;
+      will-change: transform;
+    }
+    #diagram-inner img {
+      display: block;
+      /* render at native SVG size so it's crisp at 1:1             */
+      width: 1440px;
+      height: auto;
+      pointer-events: none;
+      -webkit-user-drag: none;
+    }
+
+    /* ── Zoom hint badge ───────────────────────────────────────── */
+    .sd-zoom-hint {
+      position: absolute;
+      bottom: 12px; right: 14px;
+      font-size: 0.72rem;
+      color: #666;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 4px 10px;
+      pointer-events: none;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Rules / assumptions ───────────────────────────────────── */
+    .sd-rules-wrap {
+      max-width: 860px;
+      margin: 0 auto 40px;
+    }
+    .sd-rules-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .sd-rules-body {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px 24px;
+    }
+    .sd-rule-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .sd-rule-card {
+      background: var(--bg-card-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      gap: 10px;
+    }
+    .sd-rule-num {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 18px;
+      padding-top: 1px;
+      font-family: 'SF Mono','Fira Mono',monospace;
+    }
+    .sd-rule-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 5px;
+    }
+    .sd-rule-body {
+      font-size: 0.79rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin: 0;
+    }
+    .sd-sub-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin: 0 0 12px;
+    }
+    .sd-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    .sd-table th {
+      background: var(--bg-card-2);
+      color: var(--text-muted);
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .sd-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .sd-table tr:last-child td { border-bottom: none; }
+    .sd-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .sd-table .mono  { font-family: 'SF Mono','Fira Mono',monospace; color: var(--accent); font-size: 0.79rem; }
+    .sd-table .muted { color: var(--text-muted); font-size: 0.8rem; }
+    .sd-table .val   { font-family: 'SF Mono','Fira Mono',monospace; font-size: 0.8rem; }
+    .sd-table .gen   { color: var(--accent); }
+    .sd-table .spec  { color: var(--danger); }
+
+    @media (max-width: 680px) {
+      .sd-rule-grid { grid-template-columns: 1fr; }
+      .sd-diagram-outer { height: 55vw; min-height: 280px; margin: 0 10px 44px; }
+    }
+    @media print {
+      .sd-diagram-outer { height: auto; overflow: visible; }
+      #diagram-inner { position: static; transform: none !important; }
+      #diagram-inner img { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header lives inside .wrap -->
+<div class="wrap">
+  <header class="pm-header">
+    <div class="pm-title">
+      <h1>Simulation Design</h1>
+      <p class="subtitle">Ecosystem ABM — Generalists vs Specialists · Project 16</p>
+      <span class="course">40.015 Simulation Modeling &amp; Analysis</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0;margin-left:auto;">
+      <img class="pm-sutd-logo" src="../3_Project Management/images/SUTD.webp" alt="SUTD">
+      <div class="pm-instructor pm-team" id="instructor-strip"></div>
+    </div>
+  </header>
+</div>
+
+<!-- ═══════ FULL-WIDTH DIAGRAM ═══════ -->
+<div class="sd-diagram-outer" id="diagram-box">
+  <div id="diagram-inner">
+    <img src="images/State diagram.svg" alt="Agent State Diagram" draggable="false">
+  </div>
+  <div class="sd-zoom-hint">Scroll to zoom · Drag to pan</div>
+</div>
+
+<!-- Rules & footer back inside .wrap -->
+<div class="wrap">
+
+  <div class="sd-rules-wrap">
+    <p class="sd-rules-title">Key Rules &amp; Assumptions</p>
+    <div class="sd-rules-body">
+      <div id="rules-grid"></div>
+      <p class="sd-sub-title">Generalist vs Specialist — Parameter Comparison</p>
+      <div id="pred-diff"></div>
+    </div>
+  </div>
+
+  <div class="pm-footer">
+    Simulation Design · <code>5_Simulation Design/</code> ·
+    Utkarsh Raj Suthihar · Ye Xinyu · Jiang Yuqing · Jolie Chua
+  </div>
+
+</div>
+
+<script src="lib/sd_data.js"></script>
+<script src="lib/sd_render.js"></script>
+
+<script>
+/* ── Zoom + pan viewer ─────────────────────────────────────── */
+(function () {
+  var IMG_W = 1440, IMG_H = 810;
+  var SCALE_MIN = 0.3, SCALE_MAX = 8;
+
+  var box   = document.getElementById('diagram-box');
+  var inner = document.getElementById('diagram-inner');
+  if (!box || !inner) return;
+
+  var scale = 1, tx = 0, ty = 0;
+
+  function applyTransform() {
+    inner.style.transform =
+      'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+  }
+
+  /* Centre the image in the container at the given scale */
+  function centreAt(s) {
+    var bw = box.offsetWidth, bh = box.offsetHeight;
+    tx = (bw - IMG_W * s) / 2;
+    ty = (bh - IMG_H * s) / 2;
+    scale = s;
+    applyTransform();
+  }
+
+  /* Initialise: fit the image so the full diagram is visible,
+     then zoom in slightly so it feels large and close.          */
+  function init() {
+    var bw = box.offsetWidth, bh = box.offsetHeight;
+    /* Scale that fits the entire image inside the box */
+    var fitScale = Math.min(bw / IMG_W, bh / IMG_H);
+    /* Slightly larger than fit so there's a little room to zoom out */
+    centreAt(fitScale * 1.05);
+  }
+
+  window.addEventListener('load',   init);
+  window.addEventListener('resize', init);
+
+  /* ── Scroll to zoom (zoom toward cursor) ── */
+  box.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    var factor = e.deltaY < 0 ? 1.12 : 1 / 1.12;
+    var newScale = Math.max(SCALE_MIN, Math.min(SCALE_MAX, scale * factor));
+    if (newScale === scale) return;
+
+    var rect = box.getBoundingClientRect();
+    var mx = e.clientX - rect.left;   /* cursor relative to box */
+    var my = e.clientY - rect.top;
+
+    /* Zoom so the point under the cursor stays fixed */
+    tx = mx - (mx - tx) * (newScale / scale);
+    ty = my - (my - ty) * (newScale / scale);
+    scale = newScale;
+    applyTransform();
+  }, { passive: false });
+
+  /* ── Drag to pan ── */
+  var dragging = false, dragX, dragY;
+
+  box.addEventListener('mousedown', function (e) {
+    dragging = true;
+    dragX = e.clientX; dragY = e.clientY;
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', function (e) {
+    if (!dragging) return;
+    tx += e.clientX - dragX;
+    ty += e.clientY - dragY;
+    dragX = e.clientX; dragY = e.clientY;
+    applyTransform();
+  });
+  document.addEventListener('mouseup', function () { dragging = false; });
+
+  /* ── Touch: one-finger pan, two-finger pinch-zoom ── */
+  var t0x, t0y, pinchDist0 = null;
+
+  box.addEventListener('touchstart', function (e) {
+    if (e.touches.length === 1) {
+      t0x = e.touches[0].clientX;
+      t0y = e.touches[0].clientY;
+      pinchDist0 = null;
+    } else if (e.touches.length === 2) {
+      pinchDist0 = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+    }
+  }, { passive: true });
+
+  box.addEventListener('touchmove', function (e) {
+    e.preventDefault();
+    if (e.touches.length === 1 && pinchDist0 === null) {
+      tx += e.touches[0].clientX - t0x;
+      ty += e.touches[0].clientY - t0y;
+      t0x = e.touches[0].clientX;
+      t0y = e.touches[0].clientY;
+      applyTransform();
+    } else if (e.touches.length === 2 && pinchDist0 !== null) {
+      var d = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      var newScale = Math.max(SCALE_MIN, Math.min(SCALE_MAX, scale * d / pinchDist0));
+      var rect  = box.getBoundingClientRect();
+      var cx    = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left;
+      var cy    = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top;
+      tx = cx - (cx - tx) * (newScale / scale);
+      ty = cy - (cy - ty) * (newScale / scale);
+      scale = newScale;
+      pinchDist0 = d;
+      applyTransform();
+    }
+  }, { passive: false });
+
+  box.addEventListener('touchend', function () { pinchDist0 = null; }, { passive: true });
+})();
+</script>
+
+<script src="../video-preload.js"></script>
+
+<!-- ── Page nav ── -->
+<a href="../4_Data Collection and Manipulation/data_collection.html" class="nav-prev-btn" title="Data Collection & Manipulation">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+  Prev
+</a>
+<a href="../6_Model Documentation and Programming/model_documentation.html" class="nav-next-btn" title="Model Documentation & Programming">
+  Next
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+</a>
+<style>
+.nav-next-btn, .nav-prev-btn {
+  position: fixed;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.38);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  z-index: 9999;
+}
+.nav-next-btn { right: 28px; background: var(--accent, #60a5fa); color: #fff; padding: 10px 20px 10px 18px; }
+.nav-prev-btn { left: 28px; background: var(--bg-card, #1e2432); color: var(--text-muted, #8899af); border: 1px solid var(--border, #2a3244); padding: 10px 18px 10px 16px; }
+.nav-next-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(0,0,0,0.48); text-decoration: none; }
+.nav-prev-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(0,0,0,0.38); text-decoration: none; color: var(--text, #e2e8f0); }
+</style>
+
+</body>
+</html>

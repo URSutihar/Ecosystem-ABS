@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ecosystem Simulator — Generalists vs Specialists</title>
+
+<!-- D3 for SVG agent rendering -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+
+<!-- Plotly for graphs -->
+<script type="text/javascript" src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+<!-- Custom styles -->
+<link rel="stylesheet" href="styles/ecosystem.css">
+
+</head>
+<body>
+
+<!-- ═══════ TITLE BAR ═══════ -->
+<div class="title-bar">
+  <div>
+    <h1><span class="hl">&#9650;</span> Ecosystem Simulator — <span class="hl">Generalists vs Specialists (Team 16)</span></h1>
+    <div class="course-info">40.015 Simulation Modeling &amp; Analysis &nbsp;|&nbsp; Utkarsh Raj Sutihar (1008039) &nbsp;&bull;&nbsp; Ye Xinyu (1007833) &nbsp;&bull;&nbsp; Jiang Yuqing (1007904) &nbsp;&bull;&nbsp; Jolie Chua (1008463)</div>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--prey-green)"></i>Prey (20 spp)</span>
+    <span><i style="background:var(--gen-amber)"></i>Generalist</span>
+    <span><i style="background:var(--spec-red)"></i>Specialist</span>
+  </div>
+</div>
+
+<!-- ═══════ MAIN 3-COLUMN LAYOUT ═══════ -->
+<div class="main-layout">
+
+  <!-- ═══════ LEFT PANEL: Simulation Parameters ═══════ -->
+  <div class="panel-left">
+    <h2>Simulation Parameters</h2>
+
+    <div class="sec">
+      <h3>1) World Settings</h3>
+      <div class="param-row">
+        <label>Grid Size</label>
+        <input type="range" id="p-gridSize" min="20" max="80" value="50" step="5" onchange="redrawWindow();">
+        <span class="val" id="v-gridSize">50</span>
+      </div>
+      <div class="param-row">
+        <label>Max Ticks</label>
+        <input type="range" id="p-maxTicks" min="100" max="2000" value="500" step="50" onchange="redrawWindow();">
+        <span class="val" id="v-maxTicks">500</span>
+      </div>
+      <div class="param-row">
+        <label>Sim Speed</label>
+        <input type="range" id="p-speed" min="0" max="500" value="250" step="10">
+        <span class="val" id="v-speed">250</span>
+      </div>
+      <div class="param-row">
+        <label>Random Seed</label>
+        <input type="number" id="p-seed" min="1" max="999999" style="width:80px; margin-left:auto; background:var(--bg); border:1px solid var(--border); color:var(--text); padding:3px 6px; border-radius:4px; font-size:0.66rem;">
+        <span class="val" style="font-size:0.5rem; opacity:0.6;"></span>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h3>2) Prey (20 Species, 4 per Biome)</h3>
+      <div class="param-row">
+        <label>Initial Count</label>
+        <input type="range" id="p-preyCount" min="100" max="1500" value="600" step="50" onchange="redrawWindow();">
+        <span class="val" id="v-preyCount">600</span>
+      </div>
+      <div class="param-row">
+        <label>Carrying Cap (K)</label>
+        <input type="range" id="p-preyK" min="100" max="3000" value="1500" step="50">
+        <span class="val" id="v-preyK">1500</span>
+      </div>
+      <div class="param-row">
+        <label>Repro Rate</label>
+        <input type="range" id="p-preyRepro" min="0" max="0.3" value="0.1" step="0.01">
+        <span class="val" id="v-preyRepro">0.1</span>
+      </div>
+      <div class="param-row">
+        <label>Mortality</label>
+        <input type="range" id="p-preyMort" min="0" max="0.1" value="0.01" step="0.005">
+        <span class="val" id="v-preyMort">0.01</span>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h3>3) Generalist Predators</h3>
+      <div class="param-row">
+        <label>Initial Count</label>
+        <input type="range" id="p-genCount" min="0" max="100" value="25" step="5" onchange="redrawWindow();">
+        <span class="val" id="v-genCount">25</span>
+      </div>
+      <div class="param-row">
+        <label>Hunt Success</label>
+        <input type="range" id="p-genHunt" min="0" max="1" value="0.35" step="0.05">
+        <span class="val" id="v-genHunt">0.35</span>
+      </div>
+      <div class="param-row">
+        <label>Energy / Kill</label>
+        <input type="range" id="p-genEnergy" min="1" max="15" value="5" step="1">
+        <span class="val" id="v-genEnergy">5</span>
+      </div>
+      <div class="param-row">
+        <label>Reproduce %</label>
+        <input type="range" id="p-genRepro" min="0" max="0.2" value="0.06" step="0.01">
+        <span class="val" id="v-genRepro">0.06</span>
+      </div>
+      <div class="param-row">
+        <label>Mortality %</label>
+        <input type="range" id="p-genMort" min="0" max="0.15" value="0.025" step="0.005">
+        <span class="val" id="v-genMort">0.025</span>
+      </div>
+      <div class="param-row">
+        <label>Starve Thresh</label>
+        <input type="range" id="p-genStarve" min="0" max="10" value="0" step="1">
+        <span class="val" id="v-genStarve">0</span>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h3>4) Specialist Predators (1 type per biome)</h3>
+      <div class="param-row">
+        <label>Total Count</label>
+        <input type="range" id="p-specCount" min="0" max="100" value="25" step="5" onchange="redrawWindow();">
+        <span class="val" id="v-specCount">25</span>
+      </div>
+      <div class="param-row">
+        <label>Hunt Success</label>
+        <input type="range" id="p-specHunt" min="0" max="1" value="0.55" step="0.05">
+        <span class="val" id="v-specHunt">0.55</span>
+      </div>
+      <div class="param-row">
+        <label>Energy / Kill</label>
+        <input type="range" id="p-specEnergy" min="1" max="30" value="8" step="1">
+        <span class="val" id="v-specEnergy">8</span>
+      </div>
+      <div class="param-row">
+        <label># Spp Hunted</label>
+        <input type="range" id="p-specDiet" min="1" max="4" value="3" step="1">
+        <span class="val" id="v-specDiet">3</span>
+      </div>
+      <div class="param-row">
+        <label>Reproduce %</label>
+        <input type="range" id="p-specRepro" min="0" max="0.2" value="0.06" step="0.01">
+        <span class="val" id="v-specRepro">0.06</span>
+      </div>
+      <div class="param-row">
+        <label>Mortality %</label>
+        <input type="range" id="p-specMort" min="0" max="0.15" value="0.015" step="0.005">
+        <span class="val" id="v-specMort">0.015</span>
+      </div>
+      <div class="param-row">
+        <label>Starve Thresh</label>
+        <input type="range" id="p-specStarve" min="0" max="10" value="0" step="1">
+        <span class="val" id="v-specStarve">0</span>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h3>5) Environmental Shocks</h3>
+      <div class="param-row">
+        <label>Shock Severity</label>
+        <input type="range" id="p-shockSev" min="0" max="0.6" value="0.2" step="0.05">
+        <span class="val" id="v-shockSev">0.20</span>
+      </div>
+
+      <div class="shock-target-section">
+        <label class="shock-label">Target Biomes:</label>
+        <div class="shock-checkboxes">
+          <label class="cb-label"><input type="checkbox" id="shock-b0"> Grassland</label>
+          <label class="cb-label"><input type="checkbox" id="shock-b1"> Ice Tundra</label>
+          <label class="cb-label"><input type="checkbox" id="shock-b2"> Desert</label>
+          <label class="cb-label"><input type="checkbox" id="shock-b3"> Rainforest</label>
+          <label class="cb-label"><input type="checkbox" id="shock-b4"> Swamp</label>
+        </div>
+        <button class="btn danger" id="btn-shock" style="width:100%; margin-top:6px;">&#9889; Trigger Shock</button>
+      </div>
+
+      <div class="auto-shock-section">
+        <div class="param-row" style="margin-top:8px;">
+          <label>Auto Shock (Monte Carlo)</label>
+          <input type="checkbox" id="shock-auto" checked>
+        </div>
+        <div class="param-row">
+          <label>Auto Shock Prob</label>
+          <input type="range" id="p-shockProb" min="0" max="0.1" value="0.01" step="0.005">
+          <span class="val" id="v-shockProb">0.01</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h3>Species Encyclopedia</h3>
+      <div class="species-list" id="species-list"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn primary" id="btn-start">&#9654; Start</button>
+      <button class="btn" id="btn-pause">&#10074;&#10074; Pause</button>
+      <button class="btn" id="btn-step">&#9193; Step</button>
+      <button class="btn danger" id="btn-reset">&#8635; Reset</button>
+    </div>
+  </div>
+
+  <!-- ═══════ CENTER PANEL: SVG Surface ═══════ -->
+  <div class="panel-center">
+    <div class="info-bar">
+      <span>Tick: <strong id="info-tick">0</strong></span>
+      <span>Prey: <strong id="info-prey" style="color:var(--prey-green)">0</strong></span>
+      <span>Gen: <strong id="info-gen" style="color:var(--gen-amber)">0</strong></span>
+      <span>Spec: <strong id="info-spec" style="color:var(--spec-red)">0</strong></span>
+      <span>Shocks: <strong id="info-shocks" style="color:var(--shock-pink)">0</strong></span>
+    </div>
+
+    <div id="surface-box">
+      <svg id="surface" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="sv" id="s-prey" style="color:var(--prey-green)">0</div><div class="sl">Prey</div></div>
+      <div class="stat-card"><div class="sv" id="s-gen" style="color:var(--gen-amber)">0</div><div class="sl">Generalists</div></div>
+      <div class="stat-card"><div class="sv" id="s-spec" style="color:var(--spec-red)">0</div><div class="sl">Specialists</div></div>
+    </div>
+
+    <div class="event-log" id="elog">
+      <div style="color:var(--text-muted)">Events appear here...</div>
+    </div>
+  </div>
+
+  <!-- ═══════ RIGHT PANEL: Graphs ═══════ -->
+  <div class="panel-right">
+    <h2>Graphs</h2>
+
+    <div class="chart-box">
+      <h4 style="display:flex; justify-content:space-between; align-items:center;">
+        <span>Prey &amp; Predator Dynamics</span>
+        <select id="phase-biome" style="font-size:0.55rem; background:var(--bg); color:var(--text-dim); border:1px solid var(--border); border-radius:3px; padding:2px 4px;">
+          <option value="-1">All (Global)</option>
+          <option value="0">Grassland</option>
+          <option value="1">Ice Tundra</option>
+          <option value="2">Desert</option>
+          <option value="3">Rainforest</option>
+          <option value="4">Swamp</option>
+        </select>
+      </h4>
+      <div id="chart-phase" style="width:100%; height:220px;"></div>
+    </div>
+
+    <div class="chart-box">
+      <h4>Prey Species Count</h4>
+      <div id="chart-species" style="width:100%; height:200px;"></div>
+    </div>
+
+    <div class="chart-box">
+      <h4 style="display:flex; align-items:center;">Population per Biome<span style="margin-left:auto; display:flex; gap:10px; font-size:0.55rem; font-weight:400; color:#8899af;"><span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;background:#2dd4a0;border-radius:2px;display:inline-block;"></span>Prey</span><span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;background:#f5a623;border-radius:2px;display:inline-block;"></span>Gen</span><span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;background:#ef4455;border-radius:2px;display:inline-block;"></span>Spec</span></span></h4>
+      <div id="chart-biome" style="width:100%; height:200px;"></div>
+    </div>
+
+    <div class="chart-box mc-box">
+      <h4>Monte Carlo Analysis</h4>
+      <div class="mc-controls">
+        <div class="mc-ctrl-row">
+          <label># Runs</label>
+          <input type="number" id="mc-runs" value="100" min="10" max="5000" step="10">
+          <label>Display</label>
+          <input type="number" id="mc-display" value="100" min="10" max="500" step="10">
+        </div>
+        <div class="mc-ctrl-row">
+          <label>Seed Start</label>
+          <input type="number" id="mc-seed-start" min="1" max="999999">
+        </div>
+        <div class="mc-ctrl-row">
+          <button id="mc-run-btn" class="mc-btn" onclick="MC.run();">Run Monte Carlo</button>
+          <button class="mc-btn mc-btn-cancel" onclick="MC.cancel();">Cancel</button>
+          <span id="mc-status" class="mc-status">Idle</span>
+        </div>
+        <div class="mc-progress"><div id="mc-progress-bar" class="mc-progress-bar"></div></div>
+      </div>
+      <div id="mc-stats" class="mc-stats-grid"></div>
+      <div id="chart-mc" style="width:100%; height:300px;"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════ AGENT TOOLTIP ═══════ -->
+<div id="agent-tooltip" class="agent-tooltip" style="display:none;"></div>
+
+<!-- ═══════ SPECIES ENCYCLOPEDIA MODAL ═══════ -->
+<div id="species-modal" class="species-modal" style="display:none;">
+  <button class="modal-arrow modal-arrow-left" onclick="navigateSpecies(-1)">&#9664;</button>
+  <div class="species-modal-content">
+    <button class="modal-close" onclick="hideSpeciesModal();">&times;</button>
+    <div id="species-modal-body"></div>
+  </div>
+  <button class="modal-arrow modal-arrow-right" onclick="navigateSpecies(1)">&#9654;</button>
+</div>
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script type="text/javascript" src="lib/ecosystem_engine.js"></script>
+<script type="text/javascript" src="lib/species_data.js"></script>
+<script type="text/javascript" src="lib/PlotGraph_ecosystem.js"></script>
+<script type="text/javascript" src="lib/sim_core.js"></script>
+<script type="text/javascript" src="lib/mc_orchestrator.js"></script>
+<script>
+// Initialize everything after DOM + all scripts are fully loaded
+window.addEventListener('load', function() {
+  randomizeSeeds();
+  initCharts();
+  initSim();
+});
+
+// Fill both seed inputs with a fresh random value (1..999999).
+// Called on page load and on Reset — the user can still override.
+function randomizeSeeds() {
+  var pSeed = document.getElementById('p-seed');
+  var mcSeed = document.getElementById('mc-seed-start');
+  if (pSeed) pSeed.value = Math.floor(Math.random() * 999999) + 1;
+  if (mcSeed) mcSeed.value = Math.floor(Math.random() * 999999) + 1;
+}
+</script>
+
+<script src="../video-preload.js"></script>
+
+<!-- ── Page nav ── -->
+<a href="../6_Model Documentation and Programming/model_documentation.html" class="nav-prev-btn" title="Model Documentation & Programming">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+  Prev
+</a>
+<a href="../8_Output Analysis/output_analysis.html" class="nav-next-btn" title="Output Analysis">
+  Next
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+</a>
+<style>
+.nav-next-btn, .nav-prev-btn {
+  position: fixed;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.38);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  z-index: 9999;
+}
+.nav-next-btn { right: 28px; background: var(--accent, #60a5fa); color: #fff; padding: 10px 20px 10px 18px; }
+.nav-prev-btn { left: 28px; background: var(--bg-card, #1e2432); color: var(--text-muted, #8899af); border: 1px solid var(--border, #2a3244); padding: 10px 18px 10px 16px; }
+.nav-next-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(0,0,0,0.48); text-decoration: none; }
+.nav-prev-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(0,0,0,0.38); text-decoration: none; color: var(--text, #e2e8f0); }
+</style>
+
+</body>
+</html>

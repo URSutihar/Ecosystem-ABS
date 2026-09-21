@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project 16 — Ecosystem ABM (SMA 40.015)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="3_Project Management/styles/pm.css">
+
+  <style>
+    /* ── Welcome banner ─────────────────────────────────────── */
+    .idx-welcome {
+      max-width: 820px;
+      margin: 0 auto 44px;
+    }
+    .idx-welcome p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      margin: 0 0 10px;
+    }
+    .idx-welcome p:last-child { margin: 0; }
+
+    /* ── Section label ──────────────────────────────────────── */
+    .idx-label {
+      max-width: 820px;
+      margin: 0 auto 14px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── File tree ──────────────────────────────────────────── */
+    .idx-tree {
+      max-width: 820px;
+      margin: 0 auto 48px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      font-family: 'SF Mono', 'Fira Mono', monospace;
+      font-size: 0.82rem;
+    }
+
+    /* root row */
+    .idx-root {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      background: var(--bg-card-2);
+    }
+    .idx-root svg { opacity: 0.5; flex-shrink: 0; }
+
+    /* each folder row */
+    .idx-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.12s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .idx-row:last-child { border-bottom: none; }
+    .idx-row:hover { background: rgba(255,255,255,0.03); }
+    .idx-row:hover .idx-row-name { color: var(--accent-2); }
+    .idx-row:hover .idx-row-arrow { opacity: 1; }
+
+    /* tree gutter */
+    .idx-gutter {
+      display: flex;
+      align-items: center;
+      padding: 13px 0 13px 20px;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .idx-branch {
+      color: var(--border);
+      font-size: 1rem;
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* folder number badge */
+    .idx-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: #0a0e14;
+      flex-shrink: 0;
+      font-family: 'SF Mono', 'Fira Mono', monospace;
+    }
+
+    /* row body */
+    .idx-row-body {
+      flex: 1;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 13px 16px 13px 10px;
+      min-width: 0;
+    }
+    .idx-row-folder {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .idx-row-name {
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: system-ui, -apple-system, sans-serif;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: color 0.12s;
+    }
+    .idx-row-file {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      margin-left: auto;
+      white-space: nowrap;
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+    .idx-row-arrow {
+      color: var(--accent-2);
+      margin-left: 12px;
+      opacity: 0;
+      transition: opacity 0.12s;
+      flex-shrink: 0;
+      padding-right: 18px;
+    }
+
+    /* colour coding by section */
+    .c1 { background: #ef4455; }
+    .c2 { background: #f5a623; }
+    .c3 { background: #60a5fa; }
+    .c4 { background: #2dd4a0; }
+    .c5 { background: #a78bfa; }
+    .c6 { background: #38bdf8; }
+    .c7 { background: #fb923c; }
+    .c8 { background: #4ade80; }
+    .c9 { background: #e879f9; }
+
+    /* non-linked row (no HTML) */
+    .idx-row-inactive {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      opacity: 0.45;
+      cursor: default;
+    }
+    .idx-row-inactive:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ═══════ HEADER ═══════ -->
+  <header class="pm-header">
+    <div class="pm-title">
+      <h1>Ecosystem ABM</h1>
+      <p class="subtitle">Generalists vs Specialists · Project 16</p>
+      <span class="course">40.015 Simulation Modeling &amp; Analysis</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0;margin-left:auto;">
+      <img class="pm-sutd-logo" src="3_Project Management/images/SUTD.webp" alt="SUTD">
+      <div class="pm-instructor pm-team" id="instructor-strip"></div>
+    </div>
+  </header>
+
+  <!-- ═══════ WELCOME ═══════ -->
+  <div class="idx-welcome">
+    <p>
+      Welcome to <strong style="color:var(--text)">Project 16</strong> — an agent-based simulation
+      of a fictional five-biome ecosystem that pits <strong style="color:var(--accent)">generalist</strong>
+      predators against <strong style="color:var(--danger)">specialist</strong> predators to investigate
+      which foraging strategy prevails under environmental uncertainty.
+    </p>
+    <p>
+      The full project is organised across nine deliverable folders below. Click any row to open that
+      section's page. Use the <strong style="color:var(--text)">Prev / Next</strong> buttons on each
+      page to navigate sequentially.
+    </p>
+  </div>
+
+  <!-- ═══════ FILE TREE ═══════ -->
+  <p class="idx-label">Project Structure</p>
+
+  <div class="idx-tree">
+
+    <!-- root -->
+    <div class="idx-root">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2z"/></svg>
+      Project 16 / &nbsp;—&nbsp; SMA 40.015
+    </div>
+
+    <!-- 1 -->
+    <a class="idx-row" target="_blank" href="1_Project Brief/project_brief.html">
+      <div class="idx-gutter">
+        <span class="idx-branch">├─</span>
+        <span class="idx-num c1">1</span>
+      </div>
+      <div class="idx-row-body">
+        <span class="idx-row-folder">1_Project Brief /</span>
+        <span class="idx-row-name">Project Brief</span>
+        <span class="idx-row-file">project_brief.html</span>
+      </div>
+      <span class="idx-row-arrow">→</span>
+    </a>
+
+    <!-- 2 -->
+    <a class="idx-row" target="_blank" href="2_Background Reading Report/background_reading.html">
+      <div class="idx-gutter">
+        <span class="idx-branch">├─</span>
+        <span class="idx-num c2">2</span>
+      </div>
+      <div class="idx-row-body">
+        <span class="idx-row-folder">2_Background Reading Report /</span>
+        <span class="idx-row-name">Background Reading Report</span>
+        <span class="idx-row-file">background_reading.html</span>
+      </div>
+      <span class="idx-row-arrow">→</span>
+    </a>
+
+    <!-- 3 -->
+    <a class="idx-row" target="_blank" href="3_Project Management/project_management.html">
+      <div class="idx-gutter">
+        <span class="idx-branch">├─</span>
+        <span class="idx-num c3">3</span>
+      </div>
+      <div class="idx-row-body">
+        <span class="idx-row-folder">3_Project Management /</span>
+        <span class="idx-row-name">Project Management</span>
+        <span class="idx-row-file">project_management.html</span>
+      </div>
+      <span class="idx-row-arrow">→</span>
+    </a>
+
+    <!-- 4 -->
+    <a class="idx-row" target="_blank" href="4_Data Collection and Manipulation/data_collection.html">
+      <div class="idx-gutter">
+        <span class="idx-branch">├─</span>
+        <span class="idx-num c4">4</span>
+      </div>
+      <div class="idx-row-body">
+        <span class="idx-row-folder">4_Data Collection and Manipulation /</span>
+        <span class="idx-row-name">Data Collection &amp; Manipulation</span>
+        <span class="idx-row-file">data_collection.html</span>
+      </div>
+      <span class="idx-row-arrow">→</span>
+    </a>
+
+    <!-- 5 -->
+    <a class="idx-row" target="_blank" href="5_Simulation Design/simulation_design.html">
+      <div class="idx-gutter">
+        <span class="idx-branch">├─</span>
+        <span class="idx-num c5">5</span>
+      </div>
+      <div class="idx-row-body">
+        <span class="idx-row-folder">5_Simulation Design /</span>
+        <span class="idx-row-name">Simulation Design</span>
+        <span class="idx-row-file">simulation_design.html</span>
+      </div>
+      <span class="idx-row-arrow">→</span>
+    </a>
+
+    <!-- 6 -->
+    <a class="idx-row" target="_blank" href="6_Model Documentation and Programming/model_documentation.html">
+      <div class="idx-gutter">
+        <span class="idx-branch">├─</span>
+        <span class="idx-num c6">6</span>
+      </div>
+      <div class="idx-row-body">
+        <span class="idx-row-folder">6_Model Documentation and Programming /</span>
+        <span class="idx-row-name">Model Documentation &amp; Programming</span>
+        <span class="idx-row-file">model_documentation.html</span>
+      </div>
+      <span class="idx-row-arrow">→</span>
+    </a>
+
+    <!-- 7 -->
+    <a class="idx-row" target="_blank" href="7_User Interface Visualization and Animation/ecosystem.html">
+      <div class="idx-gutter">
+        <span class="idx-branch">├─</span>
+        <span class="idx-num c7">7</span>
+      </div>
+      <div class="idx-row-body">
+        <span class="idx-row-folder">7_User Interface Visualization and Animation /</span>
+        <span class="idx-row-name">Simulation — UI, Visualisation &amp; Animation</span>
+        <span class="idx-row-file">ecosystem.html</span>
+      </div>
+      <span class="idx-row-arrow">→</span>
+    </a>
+
+    <!-- 8 -->
+    <a class="idx-row" target="_blank" href="8_Output Analysis/output_analysis.html">
+      <div class="idx-gutter">
+        <span class="idx-branch">├─</span>
+        <span class="idx-num c8">8</span>
+      </div>
+      <div class="idx-row-body">
+        <span class="idx-row-folder">8_Output Analysis /</span>
+        <span class="idx-row-name">Output Analysis</span>
+        <span class="idx-row-file">output_analysis.html</span>
+      </div>
+      <span class="idx-row-arrow">→</span>
+    </a>
+
+    <!-- 9 -->
+    <a class="idx-row" href="9_Promo Video/promo_video.html">
+      <div class="idx-gutter">
+        <span class="idx-branch">└─</span>
+        <span class="idx-num c9">9</span>
+      </div>
+      <div class="idx-row-body">
+        <span class="idx-row-folder">9_Promo Video /</span>
+        <span class="idx-row-name">Promo Video</span>
+        <span class="idx-row-file">promo_video.html</span>
+      </div>
+      <span class="idx-row-arrow">→</span>
+    </a>
+
+  </div>
+
+  <!-- ═══════ FOOTER ═══════ -->
+  <div class="pm-footer">
+    Project 16 · 40.015 Simulation Modeling &amp; Analysis ·
+    Utkarsh Raj Suthihar · Ye Xinyu · Jiang Yuqing · Jolie Chua
+  </div>
+
+</div>
+
+<div id="avatar-popover" class="avatar-popover"></div>
+
+<script src="3_Project Management/lib/pm_data.js"></script>
+<script>
+  /* pm_data.js sets TEAM_IMG_PATH relative to its own folder;
+     re-point it to the correct path from the root index */
+  TEAM_IMG_PATH = '3_Project Management/images/team/';
+</script>
+<script src="3_Project Management/lib/pm_render.js"></script>
+<script src="video-preload.js"></script>
+
+</body>
+</html>

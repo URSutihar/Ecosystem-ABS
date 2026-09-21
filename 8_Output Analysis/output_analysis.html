@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Output Analysis — Ecosystem ABM (SMA 40.015)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Reuse the Project Management dark theme -->
+  <link rel="stylesheet" href="../3_Project Management/styles/pm.css">
+
+  <style>
+    /* ── Document-style body ───────────────────────────────── */
+    .oa-intro {
+      max-width: 820px;
+      margin: 0 auto 36px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.65;
+    }
+
+    /* ── Section ───────────────────────────────────────────── */
+    .oa-section {
+      max-width: 820px;
+      margin: 0 auto 48px;
+    }
+    .oa-section-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #0a0e14;
+      margin-right: 12px;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+    .oa-section-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .oa-section-title {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* Paragraphs */
+    .oa-text {
+      margin: 0 0 16px;
+      font-size: 0.86rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+    .oa-text strong { color: var(--accent-2); }
+    .oa-text em { color: var(--text-muted); }
+
+    /* Sub-headings */
+    .oa-sub {
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin: 28px 0 10px;
+    }
+    .oa-sub:first-of-type { margin-top: 0; }
+
+    /* ── Image placeholder ─────────────────────────────────── */
+    .oa-figure {
+      margin: 20px 0 24px;
+      text-align: center;
+    }
+    .oa-figure img {
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: block;
+      margin: 0 auto;
+    }
+    .oa-figure-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 220px;
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      background: var(--bg-card);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      padding: 24px;
+    }
+    .oa-figure-placeholder svg {
+      opacity: 0.4;
+    }
+    .oa-figure-caption {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    /* ── Parameter table ───────────────────────────────────── */
+    .oa-param-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin: 16px 0 20px;
+    }
+    .oa-param-table th {
+      background: var(--bg-card-2);
+      color: var(--text-muted);
+      padding: 8px 14px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid var(--border);
+    }
+    .oa-param-table td {
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .oa-param-table tr:last-child td { border-bottom: none; }
+    .oa-param-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .oa-param-table .val { color: var(--ok); font-family: 'SF Mono', 'Fira Mono', monospace; font-size: 0.78rem; }
+    .oa-param-table .bad { color: var(--danger); }
+    .oa-param-table .default { color: var(--accent); }
+
+    /* ── Highlight box ─────────────────────────────────────── */
+    .oa-highlight {
+      background: rgba(245,166,35,0.06);
+      border: 1px solid rgba(245,166,35,0.2);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 20px 0;
+      font-size: 0.84rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .oa-highlight strong { color: var(--accent); }
+
+    .oa-insight {
+      background: rgba(96,165,250,0.06);
+      border: 1px solid rgba(96,165,250,0.2);
+      border-left: 4px solid var(--accent-2);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 20px 0;
+      font-size: 0.84rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .oa-insight strong { color: var(--accent-2); }
+
+    /* ── Bullet list ───────────────────────────────────────── */
+    .oa-list {
+      margin: 0 0 16px;
+      padding: 0 0 0 20px;
+      list-style: disc;
+    }
+    .oa-list li {
+      font-size: 0.84rem;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 4px;
+    }
+    .oa-list li strong { color: var(--ok); }
+
+    /* ── Cross-domain cards ────────────────────────────────── */
+    .oa-cross-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .oa-cross-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+    .oa-cross-card .cd-label {
+      font-weight: 700;
+      color: var(--accent-2);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    /* ── Stats grid ────────────────────────────────────────── */
+    .oa-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 16px 0 20px;
+    }
+    .oa-stat {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      text-align: center;
+    }
+    .oa-stat-value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      font-family: 'SF Mono', 'Fira Mono', monospace;
+    }
+    .oa-stat-label {
+      font-size: 0.66rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 4px;
+    }
+
+    /* Section colours */
+    .sec-1 { background: var(--danger); }
+    .sec-2 { background: var(--accent-2); }
+    .sec-3 { background: var(--accent); }
+
+    @media (max-width: 860px) {
+      .oa-section, .oa-intro { padding-left: 0; padding-right: 0; }
+      .oa-cross-grid { grid-template-columns: 1fr; }
+      .oa-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media print {
+      .oa-section { page-break-inside: avoid; }
+      .oa-figure-placeholder { border-style: solid; }
+      .oa-text, .oa-list li { color: #000 !important; }
+      .oa-section-title { color: #000 !important; }
+      .oa-highlight, .oa-insight { background: #f9f9f9 !important; border-color: #ccc !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ═══════ HEADER ═══════ -->
+  <header class="pm-header">
+    <div class="pm-title">
+      <h1>Output Analysis</h1>
+      <p class="subtitle">Ecosystem ABM — Generalists vs Specialists · Project 16</p>
+      <span class="course">40.015 Simulation Modeling &amp; Analysis</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0;margin-left:auto;">
+      <img class="pm-sutd-logo" src="../3_Project Management/images/SUTD.webp" alt="SUTD">
+    </div>
+  </header>
+
+  <!-- ═══════ INTRO ═══════ -->
+  <p class="oa-intro">
+    We analyse the simulation output across three perspectives: the survival dynamics of
+    <strong style="color:var(--danger)">specialist</strong> vs
+    <strong style="color:var(--accent)">generalist</strong> predators under varying parameters,
+    the emergence of <strong style="color:var(--accent-2)">classical Lotka–Volterra oscillation</strong>
+    within the stochastic agent-based model, and finally a
+    <strong style="color:var(--accent)">Monte Carlo analysis</strong> that confirms diversification as
+    the dominant survival strategy — a finding that generalises across ecology, finance, and beyond.
+  </p>
+
+  <!-- ═════════════════════════════════════════════════════════════
+       SECTION 1 — Specialist vs Generalist Survival Dynamics
+       ═════════════════════════════════════════════════════════════ -->
+  <div class="oa-section">
+    <div class="oa-section-header">
+      <span class="oa-section-num sec-1">1</span>
+      <h2 class="oa-section-title">Specialist vs Generalist Survival Dynamics</h2>
+    </div>
+
+    <p class="oa-text">
+      Under default parameters, <strong>specialists initially boom</strong>. Their higher hunt success
+      rate (0.55 vs 0.35 for generalists) and greater energy gain per kill (8 vs 5) give them an early
+      population surge — they outperform generalists in the opening ticks of every simulation run.
+    </p>
+
+    <!-- Figure 1.1 — Population graph -->
+    <div class="oa-figure">
+      <img src="images/GvsS.png" alt="Generalist vs Specialist population over time" style="max-width:72%;margin:0 auto;">
+      <div class="oa-figure-caption">Figure 1.1 — Generalist (amber) vs Specialist (red) population dynamics under default parameters. Specialists surge early before crashing; generalists persist through all 500 ticks.</div>
+    </div>
+
+    <p class="oa-text">
+      However, this advantage is short-lived. Once <strong>environmental shocks</strong> begin hitting
+      individual biomes, specialists — locked to a single biome and a restricted diet — are devastated.
+      They typically go <strong>extinct</strong>, or at best cling on in a single unshocked biome.
+      Generalists, by contrast, survive through all ticks and shocks because they move freely across
+      biomes and exploit any available prey species.
+    </p>
+
+    <!-- Figures 1.2 + 1.3 — side by side -->
+    <div style="display:flex;gap:16px;margin:20px 0 24px;align-items:flex-start;">
+      <div style="flex:1;min-width:0;text-align:center;">
+        <img src="images/onebiome.png" alt="Simulation grid showing specialists confined to one biome" style="max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:0 auto;">
+        <div class="oa-figure-caption" style="margin-top:8px;">Figure 1.2 — Surviving specialists (red) confined to one biome; generalists (amber) span the full grid.</div>
+      </div>
+      <div style="flex:0 0 auto;width:24%;text-align:center;">
+        <img src="images/params1.png" alt="Simulation parameters for this run" style="max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:0 auto;">
+        <div class="oa-figure-caption" style="margin-top:8px;">Figure 1.3 — Simulation parameters and seed used to produce Figures 1.1 and 1.2.</div>
+      </div>
+    </div>
+
+    <p class="oa-sub">Parameter Sensitivity — What happens when we change key variables?</p>
+
+    <p class="oa-text">
+      To investigate the robustness of this finding, we systematically vary one parameter at a time
+      while keeping others at their defaults. The table below summarises how specialist and generalist
+      survival respond to changes in <strong>mortality rate</strong>, <strong>reproduction rate</strong>,
+      and <strong>hunt success</strong>.
+    </p>
+
+    <!-- Parameter sweep table -->
+    <table class="oa-param-table">
+      <thead>
+        <tr>
+          <th>Parameter Varied</th>
+          <th>Seed</th>
+          <th>Value</th>
+          <th>Specialist Outcome</th>
+          <th>Generalist Outcome</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="3"><strong>Specialist Mortality</strong></td>
+          <td class="value">636649</td>
+          <td>0.030</td>
+          <td class="bad">Extinct by ~tick 224</td>
+          <td class="val">Survives all 500 ticks</td>
+        </tr>
+        <tr>
+          <td class="value">695393</td>
+          <td class="default">0.015 (default)</td>
+          <td class="bad">Extinct by ~tick 271</td>
+          <td class="val">Survives all 500 ticks</td>
+        </tr>
+        <tr>
+          <td class="value">897206</td>
+          <td>0.005</td>
+          <td class="bad">Extinct by ~tick 370</td>
+          <td class="val">Survives all 500 ticks</td>
+        </tr>
+        <tr>
+          <td rowspan="3"><strong>Specialist Reproduction</strong></td>
+          <td class="value">81966</td>
+          <td>0.03</td>
+          <td class="bad">Extinct by ~tick 205</td>
+          <td class="val">Survives all 500 ticks</td>
+        </tr>
+        <tr>
+          <td class="value">38877</td>
+          <td class="default">0.06 (default)</td>
+          <td class="bad">Extinct by ~tick 305</td>
+          <td class="val">Survives all 500 ticks</td>
+        </tr>
+        <tr>
+          <td class="value">353311</td>
+          <td>0.09</td>
+          <td class="bad">Extinct by ~tick 393</td>
+          <td class="val">Survives all 500 ticks</td>
+        </tr>
+        <tr>
+          <td rowspan="3"><strong>Generalist Hunt Success</strong></td>
+          <td class="value">136218</td>
+          <td>0.20</td>
+          <td class="bad">Extinct by tick ~471</td>
+          <td class="val">Survives all 500 ticks</td>
+        </tr>
+        <tr>
+          <td class="value">300229</td>
+          <td class="default">0.35 (default)</td>
+          <td class="bad">Extinct by tick ~213</td>
+          <td class="val">Survives all 500 ticks</td>
+        </tr>
+        <tr>
+          <td>0.50</td>
+          <td class="value">380444</td>
+          <td class="bad">Extinct by ticks ~498</td>
+          <td class="val">Survives (larger pop)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="oa-highlight">
+      <strong>Key Finding:</strong> Across all parameter combinations tested, generalists survive while
+      specialists go extinct. The specialist advantage in hunt efficiency is always overwhelmed by their
+      structural fragility — spatial lock-in to a single biome means they cannot escape environmental shocks.
+      </br>
+      An interesting observation is when Generalists have a high hunt success (0.5), Specialists tend to live longer (~490 ticks) or even survive in many runs.
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════
+       SECTION 2 — Emergent Lotka–Volterra Oscillation
+       ═════════════════════════════════════════════════════════════ -->
+  <div class="oa-section">
+    <div class="oa-section-header">
+      <span class="oa-section-num sec-2">2</span>
+      <h2 class="oa-section-title">Emergent Lotka–Volterra Oscillation</h2>
+    </div>
+
+    <p class="oa-text">
+      A remarkable emergent property of our agent-based model is that it faithfully reproduces the
+      <strong>classical Lotka–Volterra delayed oscillation</strong> — despite being built from
+      individual-level stochastic rules, not differential equations. We observe this in two distinct
+      scenarios:
+    </p>
+
+    <p class="oa-sub">Case (a) — All specialists extinct: global dynamics</p>
+
+    <p class="oa-text">
+      Once every specialist goes extinct (typically by tick 300–400), the system simplifies to generalists
+      + prey across all five biomes. The generalist population stabilises because it can freely redistribute
+      across biomes, exploiting whichever has the most abundant prey. The global dynamics resemble a
+      noise-dampened predator–prey equilibrium — oscillations exist but are smoothed by the spatial averaging
+      effect of cross-biome movement.
+    </p>
+
+    <!-- Figure 2.1 — Global dynamics + params -->
+    <div style="display:flex;gap:16px;margin:20px 0 24px;align-items:flex-start;">
+      <div style="flex:1;min-width:0;text-align:center;">
+        <img src="images/lvo.png" alt="Global Lotka-Volterra dynamics" style="max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:0 auto;">
+        <div class="oa-figure-caption" style="margin-top:8px;">Figure 2.1 — Post-extinction global dynamics. Generalists and prey reach a noisy equilibrium.</div>
+      </div>
+      <div style="flex:0 0 auto;width:17%;text-align:center;">
+        <img src="images/params2.png" alt="Simulation parameters for this run" style="max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:0 auto;">
+        <div class="oa-figure-caption" style="margin-top:8px;">Parameters &amp; seed for Fig. 2.1.</div>
+      </div>
+    </div>
+
+    <p class="oa-sub">Case (b) — Single biome isolation: classic oscillation</p>
+
+    <p class="oa-text">
+      When we zoom into a <strong>single biome</strong> and examine the specialist predator + local prey
+      populations, the dynamics exhibit <strong>textbook Lotka–Volterra delayed oscillation</strong>:
+    </p>
+
+    <ul class="oa-list">
+      <li>Prey population rises → <strong>specialist population rises</strong> (with a delay, as predators reproduce after feeding)</li>
+      <li>Specialists overshoot → prey crashes due to over-predation</li>
+      <li>Prey scarcity → <strong>specialist population crashes</strong> (starvation / natural mortality)</li>
+      <li>Low predation pressure → <strong>prey recovers</strong> → cycle repeats</li>
+    </ul>
+
+    <!-- Figure 2.2 — Single-biome oscillation + params -->
+    <div style="display:flex;gap:16px;margin:20px 0 24px;align-items:flex-start;">
+      <div style="flex:1;min-width:0;text-align:center;">
+        <img src="images/iso.png" alt="Single-biome Lotka-Volterra oscillation" style="max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:0 auto;">
+        <div class="oa-figure-caption" style="margin-top:8px;">Figure 2.2 — Specialist + prey dynamics in a single biome. Classic Lotka–Volterra delayed oscillation emerges from individual-level agent rules.</div>
+      </div>
+      <div style="flex:0 0 auto;width:17%;text-align:center;">
+        <img src="images/params3.png" alt="Simulation parameters for this run" style="max-width:100%;border-radius:8px;border:1px solid var(--border);display:block;margin:0 auto;">
+        <div class="oa-figure-caption" style="margin-top:8px;">Parameters &amp; seed for Fig. 2.2.</div>
+      </div>
+    </div>
+
+    <div class="oa-insight">
+      <strong>Significance:</strong> This emergent oscillation confirms that our stochastic, spatial,
+      agent-based model faithfully reproduces the mathematical framework it is built upon — the
+      Lotka–Volterra equations. The fact that differential-equation-level behaviour emerges from
+      individual-level rules (move → hunt → eat → reproduce → die) is a powerful validation of the
+      simulation's correctness.
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════
+       SECTION 3 — Monte Carlo Analysis: Diversification Wins
+       ═════════════════════════════════════════════════════════════ -->
+  <div class="oa-section">
+    <div class="oa-section-header">
+      <span class="oa-section-num sec-3">3</span>
+      <h2 class="oa-section-title">Monte Carlo Analysis — Diversification Wins</h2>
+    </div>
+
+    <p class="oa-text">
+      To move beyond single-run observations, we run a <strong>Monte Carlo analysis</strong> — repeating
+      the simulation across many independent runs (varying random seeds), each with the same default
+      parameters and 500 ticks. This allows us to compute <strong>survival probabilities</strong> and
+      <strong>population distributions</strong> with statistical confidence.
+    </p>
+
+    <!-- Stats grid — all 6 in one row -->
+    <div class="oa-stats" style="grid-template-columns:repeat(6,1fr);gap:8px;">
+      <div class="oa-stat" style="padding:10px 8px;">
+        <div class="oa-stat-value" style="color:var(--accent);font-size:1.05rem;">~100%</div>
+        <div class="oa-stat-label">Gen Survival</div>
+      </div>
+      <div class="oa-stat" style="padding:10px 8px;">
+        <div class="oa-stat-value" style="color:var(--danger);font-size:1.05rem;">~19%</div>
+        <div class="oa-stat-label">Spec Survival</div>
+      </div>
+      <div class="oa-stat" style="padding:10px 8px;">
+        <div class="oa-stat-value" style="color:var(--accent);font-size:1.05rem;">~62.9</div>
+        <div class="oa-stat-label">Gen Median Pop</div>
+      </div>
+      <div class="oa-stat" style="padding:10px 8px;">
+        <div class="oa-stat-value" style="color:var(--danger);font-size:1.05rem;">1.5</div>
+        <div class="oa-stat-label">Spec Median Pop</div>
+      </div>
+      <div class="oa-stat" style="padding:10px 8px;">
+        <div class="oa-stat-value" style="font-size:0.9rem;font-family:'SF Mono','Fira Mono',monospace;">152464</div>
+        <div class="oa-stat-label">Random Seed</div>
+      </div>
+      <div class="oa-stat" style="padding:10px 8px;">
+        <div class="oa-stat-value" style="font-size:0.9rem;font-family:'SF Mono','Fira Mono',monospace;">319011</div>
+        <div class="oa-stat-label">MC Seed</div>
+      </div>
+    </div>
+
+    <p class="oa-text">
+      The results are decisive. Across all runs, <strong>generalists survive in ~96–100% of simulations</strong>,
+      while <strong>specialists survive in only ~24–30%</strong>. The median specialist trajectory collapses
+      to zero by approximately tick 400, while the generalist median stabilises around 45 individuals.
+    </p>
+
+    <!-- Figure 3.1 — Monte Carlo spaghetti plot -->
+    <div class="oa-figure">
+      <img src="images/mc.png" alt="Monte Carlo spaghetti plot" style="max-width:50%;margin:0 auto;">
+      <div class="oa-figure-caption">Figure 3.1 — Monte Carlo spaghetti plot. Each line is one simulation run. Amber = generalist trajectories; red = specialist trajectories. Bold lines show medians.</div>
+    </div>
+
+    <p class="oa-sub">Interpretation: Diversification as the Dominant Strategy</p>
+
+    <p class="oa-text">
+      The mechanism behind generalist resilience is <strong>diversification</strong>. By feeding on
+      multiple prey species across all five biomes, generalists spread their "risk" — when one biome is
+      shocked, they relocate to unaffected biomes and continue hunting. Specialists, locked to a single
+      biome, are making a <strong>concentrated bet</strong> that collapses under environmental stress.
+    </p>
+
+    <p class="oa-text">
+      This is not unique to ecology. The same mathematical structure — <em>efficiency under stability
+      vs resilience under volatility</em> — recurs across many fields:
+    </p>
+
+    <div class="oa-cross-grid">
+      <div class="oa-cross-card">
+        <span class="cd-label">Finance — Portfolio Theory</span>
+        A diversified portfolio (generalist) outperforms concentrated bets (specialist) under market
+        shocks. Core insight of <strong style="color:var(--accent)">Modern Portfolio Theory</strong>
+        (Markowitz, 1952) and foundation of CAPM and APT.
+      </div>
+      <div class="oa-cross-card">
+        <span class="cd-label">Epidemiology</span>
+        Broad-spectrum immunity (generalist) provides resilience against novel pathogens, while
+        pathogen-specific defences (specialist) can fail catastrophically when mutations occur.
+      </div>
+      <div class="oa-cross-card">
+        <span class="cd-label">Supply Chain Management</span>
+        Multi-source procurement (generalist) prevents single-supplier dependency (specialist)
+        from cascading into total supply failure during disruptions.
+      </div>
+      <div class="oa-cross-card">
+        <span class="cd-label">Urban Planning</span>
+        Mixed-use districts (generalist) are more resilient to economic downturns than single-industry
+        towns (specialist) that collapse when their sole industry declines.
+      </div>
+    </div>
+
+    <div class="oa-highlight">
+      <strong>Conclusion:</strong> The Monte Carlo analysis confirms that <strong>generalisation —
+      diversifying across resources and environments — is the dominant survival strategy</strong> under
+      environmental uncertainty. This is the ecological equivalent of the financial insight that
+      "diversification is the only free lunch" (Markowitz). Whether in ecosystems, portfolios, supply
+      chains, or cities, systems that avoid concentrated exposure to single risk factors are
+      structurally more resilient.
+    </div>
+  </div>
+
+  <!-- ═══════ FOOTER ═══════ -->
+  <div class="pm-footer">
+    Output Analysis · <code>8_Output Analysis/</code> ·
+    Utkarsh Raj Suthihar · Ye Xinyu · Jiang Yuqing · Jolie Chua
+  </div>
+
+</div>
+
+<!-- ── Page nav ── -->
+<a href="../7_User Interface Visualization and Animation/ecosystem.html" class="nav-prev-btn" title="Simulation">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+  Prev
+</a>
+<a href="../9_Promo Video/promo_video.html" class="nav-next-btn" title="Promo Video">
+  Next
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+</a>
+<style>
+.nav-prev-btn, .nav-next-btn {
+  position: fixed;
+  bottom: 28px;
+  left: 28px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: var(--bg-card, #1e2432);
+  color: var(--text-muted, #8899af);
+  border: 1px solid var(--border, #2a3244);
+  padding: 10px 18px 10px 16px;
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.38);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  z-index: 9999;
+}
+.nav-next-btn { left: auto; right: 28px; background: var(--accent, #60a5fa); color: #fff; padding: 10px 20px 10px 18px; }
+.nav-prev-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(0,0,0,0.38); text-decoration: none; color: var(--text, #e2e8f0); }
+.nav-next-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(0,0,0,0.48); text-decoration: none; }
+</style>
+
+<script src="../video-preload.js"></script>
+
+</body>
+</html>

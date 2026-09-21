@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Brief — Ecosystem ABM (SMA 40.015)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="../3_Project Management/styles/pm.css">
+
+  <style>
+    .brief-body {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+    .brief-section {
+      margin-bottom: 28px;
+    }
+    .brief-section h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      margin: 0 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brief-section p {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+    .brief-section p strong {
+      color: var(--accent-2);
+    }
+
+    .brief-questions {
+      margin: 0;
+      padding: 0 0 0 20px;
+      list-style: disc;
+    }
+    .brief-questions li {
+      font-size: 0.88rem;
+      color: var(--text);
+      line-height: 1.65;
+      margin-bottom: 6px;
+    }
+
+    .brief-columns {
+      display: flex;
+      gap: 28px;
+      margin-bottom: 28px;
+    }
+    .brief-col {
+      flex: 1;
+      min-width: 0;
+    }
+    .brief-col h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      margin: 0 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brief-col ul {
+      margin: 0;
+      padding: 0 0 0 16px;
+      list-style: disc;
+    }
+    .brief-col li {
+      font-size: 0.88rem;
+      color: var(--text);
+      line-height: 1.65;
+      margin-bottom: 8px;
+    }
+    .brief-col li strong {
+      color: var(--ok);
+    }
+
+    .cross-domain-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: var(--text);
+    }
+    .cross-domain-item .cd-label {
+      font-weight: 700;
+      color: var(--accent-2);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .cross-domain-item .cd-detail {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    .math-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 12px;
+      padding: 4px 8px;
+      background: rgba(96, 165, 250, 0.08);
+      border: 1px solid rgba(96, 165, 250, 0.25);
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent-2);
+      letter-spacing: 0.02em;
+    }
+    .math-badge svg {
+      flex-shrink: 0;
+    }
+
+    .brief-closing {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin: 0 0 8px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 720px) {
+      .brief-columns {
+        flex-direction: column;
+      }
+    }
+
+    @media print {
+      .brief-section p, .brief-questions li, .brief-col li, .cross-domain-item {
+        color: #000 !important;
+      }
+      .brief-section h2, .brief-col h2 {
+        color: #333 !important;
+        border-color: #ccc !important;
+      }
+      .cross-domain-item {
+        background: #f9f9f9 !important;
+        border-color: #ddd !important;
+      }
+      .math-badge {
+        background: #f0f4ff !important;
+        border-color: #ccc !important;
+        color: #333 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="pm-header">
+    <div class="pm-title">
+      <h1>Project Brief</h1>
+      <p class="subtitle">Ecosystem ABM — Generalists vs Specialists · Project 16</p>
+      <span class="course">40.015 Simulation Modeling &amp; Analysis</span>
+    </div>
+    <div class="pm-team" id="team-strip"><!-- filled by pm_render.js --></div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0;margin-left:auto;">
+      <img class="pm-sutd-logo" src="../3_Project Management/images/SUTD.webp" alt="SUTD">
+      <div class="pm-instructor pm-team" id="instructor-strip"><!-- filled by pm_render.js --></div>
+    </div>
+  </header>
+
+  <div class="brief-body">
+
+    <div class="brief-section">
+      <h2>Context &amp; Problem Statement</h2>
+      <p>
+        Many decisions in our lives are about what is the optimal step to take in any situation.
+        This is the fundamental research question in some game theoretic frameworks and generalizes very well in
+        other domains. We want to know what does mathematics have to say about investing in a market, developing
+        vaccines to diseases or training LLMs for any task.
+        </br>
+        Our project aims to answer this question by looking at it through the lens of a planet and its ecosystems.
+        The uncertainty in predation success, reproduction, mortality, etc. model the systematic risks
+        and environmental conditions and shocks model the idisyncratic risks.
+        </br>
+        Our simulation compares how generalist and specialists strategies affect species survival and ecosystem stability.
+        </br>
+        The model is grounded in <strong>Lotka–Volterra dynamics</strong> — one of the most important
+        mathematical frameworks in population ecology — extended into a stochastic, agent-based setting
+        with spatial heterogeneity across five distinct biomes.
+      </p>
+    </div>
+
+    <div class="brief-section">
+      <h2>Project Objective</h2>
+      <p>
+        To demonstrate, via Monte Carlo simulation, that diversifying away individual risks
+        is a better strategy for long-term success under large-scale shocks as losses in some area
+        are offset by gains in other, while going all-in on a particul seemingly winning strategy can backfire
+        if it is no longer valid due to environmental changes or shocks.
+        </br>
+        We show this by modeling Generalist Predator (less wins diversified portfolio) vs Specialists Predator (more wins individual assets)
+        and simulating different situations of systematic and idiosyncratic shocks.
+      </p>
+    </div>
+
+    <div class="brief-section">
+      <h2>Key Questions</h2>
+      <ul class="brief-questions">
+        <li>Does generalist strategy have higher survival rates than specialist stratgey?</li>
+        <li>If human becomes an interstellar species, how should they approach and alien planet?</li>
+        <li>How do environmental shocks affect predator and prey survival dynamics?</li>
+        <li>Does Lotka-Volterra Model hold for multiple prey and predator species?</li>
+      </ul>
+    </div>
+
+    <div class="brief-columns">
+      <div class="brief-col">
+        <h2>Stakeholders &amp; Users</h2>
+        <ul>
+          <li><strong>Ecologists &amp; biology researchers</strong> — study ecosystem behaviour under stochastic shocks and compare generalist vs specialist trade-offs.</li>
+          <li><strong>Academia</strong> — teach and learn ecology, predator–prey dynamics, agent-based modelling, stochastic modeling, Monte Carlo simulation methods and Lotka-Volterra framework</li>
+          <li><strong>Astrobiology</strong> — understand the nature and behaviour of life forms to look for in extra-terrestial life hunt.</li>
+          <li><strong>Game &amp; environment designers</strong> — build believable, balanced ecosystems with emergent dynamics.</li>
+        </ul>
+      </div>
+      <div class="brief-col">
+        <h2>Cross-Domain Generalisation</h2>
+        <div class="cross-domain-item">
+          <span class="cd-label">Finance — Diversification &amp; Portfolio Theory</span><br>
+          A diversified portfolio (generalist) outperforms concentrated bets (specialist) under market shocks.
+          <span class="cd-detail">Core insight of Modern Portfolio Theory (Markowitz); foundational to CAPM and APT.</span>
+        </div>
+        <div class="cross-domain-item">
+          <span class="cd-label">Epidemiology</span><br>
+          Broad-spectrum immunity (generalist) vs pathogen-specific defences (specialist).
+        </div>
+        <div class="cross-domain-item">
+          <span class="cd-label">Supply Chain</span><br>
+          Multi-source procurement (generalist) vs single-supplier dependency (specialist).
+        </div>
+        <div class="cross-domain-item">
+          <span class="cd-label">Urban Planning</span><br>
+          Mixed-use districts (generalist) vs single-industry towns (specialist).
+        </div>
+      </div>
+    </div>
+
+    <p class="brief-closing">
+      This simulation illuminates the fundamental trade-off between <em>efficiency</em> and
+      <em>resilience</em> — a structure recurring across ecology, finance, epidemiology, and systems
+      engineering — through interactive, data-driven Monte Carlo analysis.
+    </p>
+
+  </div>
+
+  <div class="pm-footer">
+    Project Brief · <code>1_Project Brief/</code> ·
+    Utkarsh Raj Suthihar · Ye Xinyu · Jiang Yuqing · Jolie Chua
+  </div>
+
+</div>
+
+<div id="avatar-popover" class="avatar-popover"></div>
+<script src="../3_Project Management/lib/pm_data.js"></script>
+<script>
+  TEAM_IMG_PATH = '../3_Project Management/images/team/';
+</script>
+<script src="../3_Project Management/lib/pm_render.js"></script>
+<script src="../video-preload.js"></script>
+
+<!-- ── Next-page nav ── -->
+<a href="../2_Background Reading Report/background_reading.html" class="nav-next-btn" title="Background Reading Report">
+  Next
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+</a>
+<style>
+.nav-next-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--accent, #60a5fa);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 10px 20px 10px 18px;
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.38);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  z-index: 9999;
+}
+.nav-next-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(0,0,0,0.48); text-decoration: none; }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Management — Ecosystem ABM (SMA 40.015)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="styles/pm.css">
+
+  <!-- Plotly (used for the Gantt chart at the bottom) -->
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ═══════ HEADER ═══════ -->
+  <header class="pm-header">
+    <div class="pm-title">
+      <h1>Project Management</h1>
+      <p class="subtitle">Ecosystem ABM — Generalists vs Specialists · Project 16</p>
+      <span class="course">40.015 Simulation Modeling & Analysis</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0;margin-left:auto;">
+      <img class="pm-sutd-logo" src="images/SUTD.webp" alt="SUTD">
+      <div class="pm-instructor pm-team" id="instructor-strip"><!-- filled by pm_render.js --></div>
+    </div>
+  </header>
+
+  <!-- ═══════ LEGEND ═══════ -->
+  <div class="pm-legend" id="legend"><!-- filled by pm_render.js --></div>
+
+  <!-- ═══════ INTERACTIVE TIMELINE ═══════ -->
+  <div class="timeline" id="timeline"><!-- filled by pm_render.js --></div>
+
+  <!-- ═══════ GANTT ═══════ -->
+  <section class="gantt-section">
+    <h2>Gantt Chart — Planned vs Actual</h2>
+    <div id="gantt-chart"></div>
+  </section>
+
+  <!-- ═══════ FOOTER ═══════ -->
+  <div class="pm-footer">
+    Project Management deliverable · <code>3_Project Management/</code> ·
+    Utkarsh Raj Suthihar · Ye Xinyu · Jiang Yuqing · Jolie Chua
+  </div>
+
+</div>
+
+<!-- Avatar popover (positioned via JS, hidden by default) -->
+<div id="avatar-popover" class="avatar-popover"></div>
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script src="lib/pm_data.js"></script>
+<script src="lib/pm_render.js"></script>
+<script src="../video-preload.js"></script>
+
+<!-- ── Page nav ── -->
+<a href="../2_Background Reading Report/background_reading.html" class="nav-prev-btn" title="Background Reading Report">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+  Prev
+</a>
+<a href="../4_Data Collection and Manipulation/data_collection.html" class="nav-next-btn" title="Data Collection & Manipulation">
+  Next
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+</a>
+<style>
+.nav-next-btn, .nav-prev-btn {
+  position: fixed;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.38);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  z-index: 9999;
+}
+.nav-next-btn { right: 28px; background: var(--accent, #60a5fa); color: #fff; padding: 10px 20px 10px 18px; }
+.nav-prev-btn { left: 28px; background: var(--bg-card, #1e2432); color: var(--text-muted, #8899af); border: 1px solid var(--border, #2a3244); padding: 10px 18px 10px 16px; }
+.nav-next-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(0,0,0,0.48); text-decoration: none; }
+.nav-prev-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 24px rgba(0,0,0,0.38); text-decoration: none; color: var(--text, #e2e8f0); }
+</style>
+
+</body>
+</html>
