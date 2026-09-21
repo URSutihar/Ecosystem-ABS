@@ -1,6 +1,8 @@
 /* Shared mobile corrections for the project deliverables. */
 @media (max-width: 700px) {
-  html, body { max-width: 100%; overflow-x: hidden; }
+  /* iOS Safari can trap the scroll root when body itself clips overflow. */
+  html { max-width: 100%; overflow-x: clip; }
+  body { max-width: 100%; overflow-x: visible; min-height: 100dvh; }
 
   header.pm-header {
     display: grid;

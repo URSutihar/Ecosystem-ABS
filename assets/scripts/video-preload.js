@@ -9,6 +9,6 @@
   player.tabIndex = -1;
   player.loading = 'eager';
   player.style.cssText =
-    'position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:0;left:-1px;bottom:-1px;';
+    'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;border:0;left:-9999px;top:0;';
   document.body.appendChild(player);
 }());
