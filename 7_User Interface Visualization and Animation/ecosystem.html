@@ -14,7 +14,7 @@
 
 <!-- Custom styles -->
 <link rel="stylesheet" href="styles/ecosystem.css">
-<link rel="stylesheet" href="../assets/styles/mobile.css">
+  <link rel="stylesheet" href="../assets/styles/mobile.css?v=mobile-layout-2">
 
 </head>
 <body>
@@ -30,10 +30,11 @@
     <span><i style="background:var(--gen-amber)"></i>Generalist</span>
     <span><i style="background:var(--spec-red)"></i>Specialist</span>
   </div>
+  <button class="config-toggle" type="button" aria-controls="simulation-layout" aria-expanded="false" onclick="toggleConfiguration()">⚙ Configure</button>
 </div>
 
 <!-- ═══════ MAIN 3-COLUMN LAYOUT ═══════ -->
-<div class="main-layout">
+<div class="main-layout" id="simulation-layout">
 
   <!-- ═══════ LEFT PANEL: Simulation Parameters ═══════ -->
   <div class="panel-left">
@@ -321,6 +322,15 @@ function randomizeSeeds() {
   var mcSeed = document.getElementById('mc-seed-start');
   if (pSeed) pSeed.value = Math.floor(Math.random() * 999999) + 1;
   if (mcSeed) mcSeed.value = Math.floor(Math.random() * 999999) + 1;
+}
+
+function toggleConfiguration() {
+  var layout = document.getElementById('simulation-layout');
+  var button = document.querySelector('.config-toggle');
+  if (!layout || !button) return;
+  var open = layout.classList.toggle('config-open');
+  button.setAttribute('aria-expanded', String(open));
+  button.textContent = open ? '× Close settings' : '⚙ Configure';
 }
 </script>
 

@@ -304,6 +304,21 @@ body {
   letter-spacing: -0.01em;
 }
 .title-bar h1 .hl { color: var(--cyan); }
+.config-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-bright);
+  border-radius: 5px;
+  background: var(--bg-card);
+  color: var(--cyan);
+  font: inherit;
+  font-size: 0.62rem;
+  padding: 6px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.config-toggle:hover { background: var(--border); }
 .course-info {
   font-size: 0.6rem;
   color: var(--text-muted);

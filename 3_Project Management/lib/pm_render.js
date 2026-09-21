@@ -320,6 +320,11 @@ document.addEventListener('click', function(e) {
 
 // ── Gantt chart (Plotly) ────────────────────────────────
 function renderGantt() {
+  if (window.matchMedia('(max-width: 700px)').matches) {
+    renderMobileGantt();
+    return;
+  }
+
   if (typeof Plotly === 'undefined') return;
 
   var yLabels = [], plannedBase = [], plannedDur = [],
@@ -372,6 +377,34 @@ function renderGantt() {
   }, { displayModeBar:false, responsive:true });
 }
 
+function renderMobileGantt() {
+  var host = document.getElementById('gantt-chart');
+  if (!host) return;
+  var maxWeek = 14;
+  var html = '<div class="gantt-mobile" aria-label="Planned and actual project timeline">' +
+    '<div class="gantt-mobile-legend"><span class="gantt-mobile-key"><i></i> Planned</span>' +
+    '<span class="gantt-mobile-key"><i class="actual"></i> Actual</span></div>';
+
+  for (var i = 0; i < STAGES.length; i++) {
+    var s = STAGES[i];
+    var plannedLeft = ((s.plannedWeekStart - 1) / maxWeek) * 100;
+    var plannedWidth = ((s.plannedWeekEnd - s.plannedWeekStart + 1) / maxWeek) * 100;
+    var actualLeft = ((s.actualWeekStart - 1) / maxWeek) * 100;
+    var actualWidth = ((s.actualWeekEnd - s.actualWeekStart + 1) / maxWeek) * 100;
+    var color = TYPE_COLORS[s.type] || '#f5a623';
+
+    html += '<div class="gantt-mobile-row">' +
+      '<div class="gantt-mobile-title">' + (i + 1) + '. ' + esc(s.title) +
+      ' <span>Plan ' + esc(weekRange(s.plannedWeekStart, s.plannedWeekEnd)) +
+      ' · Actual ' + esc(weekRange(s.actualWeekStart, s.actualWeekEnd)) + '</span></div>' +
+      '<div class="gantt-mobile-track">' +
+        '<i class="gantt-mobile-bar planned" style="left:' + plannedLeft + '%;width:' + plannedWidth + '%"></i>' +
+        '<i class="gantt-mobile-bar actual" style="left:' + actualLeft + '%;width:' + actualWidth + '%;--gantt-color:' + color + '"></i>' +
+      '</div></div>';
+  }
+  host.innerHTML = html + '</div>';
+}
+
 // ── Boot ─────────────────────────────────────────────────
 window.addEventListener('load', function() {
   renderTeamStrip();
@@ -379,4 +412,12 @@ window.addEventListener('load', function() {
   renderLegend();
   renderTimeline();
   renderGantt();
+});
+
+window.addEventListener('resize', function() {
+  var host = document.getElementById('gantt-chart');
+  if (!host) return;
+  var mobileMarkup = host.querySelector('.gantt-mobile');
+  var shouldUseMobile = window.matchMedia('(max-width: 700px)').matches;
+  if ((shouldUseMobile && !mobileMarkup) || (!shouldUseMobile && mobileMarkup)) renderGantt();
 });

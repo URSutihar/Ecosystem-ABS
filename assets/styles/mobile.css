@@ -21,23 +21,31 @@
     flex-shrink: 0;
   }
   .pm-sutd-logo { height: 32px; max-width: 132px; margin-left: 0 !important; }
-  .pm-instructor { display: none; }
+  #team-strip, .pm-instructor { display: none !important; }
 
   .title-bar { padding: 8px 12px; flex-wrap: nowrap; align-items: flex-start; }
   .title-bar h1 { font-size: 0.78rem; line-height: 1.25; }
   .course-info { display: none; }
-  .legend { gap: 8px; flex-shrink: 0; font-size: 0.6rem; }
+  .legend { display: none; }
+  .config-toggle { display: inline-flex; }
 
-  /* Bottom-fixed navigation blocks page controls on small screens. */
+  /* Keep navigation in reach without hiding final page content. */
   .nav-prev-btn, .nav-next-btn {
-    position: static !important;
-    display: inline-flex !important;
-    margin: 20px 0 0 16px !important;
+    position: fixed !important;
+    bottom: max(16px, env(safe-area-inset-bottom)) !important;
+    display: flex !important;
+    margin: 0 !important;
     padding: 9px 14px !important;
   }
-  .nav-prev-btn + .nav-next-btn { margin-left: 8px !important; }
+  .nav-prev-btn { left: 16px !important; right: auto !important; }
+  .nav-next-btn { left: auto !important; right: 16px !important; }
+  .wrap { padding-bottom: 112px; }
 
-  .panel-left, .panel-right { max-height: none; overflow: visible; }
+  .main-layout { min-height: 0; }
+  .panel-center { order: 1; }
+  .panel-left { display: none; order: 2; max-height: none; overflow: visible; }
+  .main-layout.config-open .panel-left { display: block; }
+  .panel-right { order: 3; max-height: none; overflow: visible; }
   .info-bar { width: 100%; justify-content: space-between; gap: 8px; }
 
   .oa-param-table { table-layout: fixed; font-size: 0.7rem; }
@@ -46,6 +54,10 @@
   .oa-paired-figure { flex-direction: column !important; gap: 12px !important; }
   .oa-paired-figure > div { width: 100% !important; flex: 1 1 auto !important; }
   .oa-figure img { max-width: 100% !important; }
+
+  .param-table { width: 100%; table-layout: fixed; font-size: 0.7rem; }
+  .param-table th, .param-table td { padding: 6px 5px; white-space: normal; overflow-wrap: anywhere; }
+  .dc-code-wrap { max-width: 100%; }
 }
 
 @media (max-width: 540px) {
