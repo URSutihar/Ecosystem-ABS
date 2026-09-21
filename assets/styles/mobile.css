@@ -1,8 +1,8 @@
 /* Shared mobile corrections for the project deliverables. */
 @media (max-width: 700px) {
-  /* iOS Safari can trap the scroll root when body itself clips overflow. */
-  html { max-width: 100%; overflow-x: clip; }
-  body { max-width: 100%; overflow-x: visible; min-height: 100dvh; }
+  /* Leave the browser's document scroll root untouched on iOS Chrome. */
+  html, body { margin: 0; min-height: 100%; }
+  .wrap, .main-layout, .title-bar { max-width: 100%; overflow-x: clip; }
 
   header.pm-header {
     display: grid;
@@ -60,6 +60,16 @@
   .param-table { width: 100%; table-layout: fixed; font-size: 0.7rem; }
   .param-table th, .param-table td { padding: 6px 5px; white-space: normal; overflow-wrap: anywhere; }
   .dc-code-wrap { max-width: 100%; }
+
+  /* Simulation Design: keep comparison data readable instead of clipping columns. */
+  #pred-diff { width: 100%; }
+  .sd-table { width: 100%; table-layout: fixed; font-size: 0.68rem; }
+  .sd-table th, .sd-table td { padding: 7px 5px; white-space: normal; overflow-wrap: anywhere; }
+  .sd-table th:nth-child(1), .sd-table td:nth-child(1) { width: 26%; }
+  .sd-table th:nth-child(2), .sd-table td:nth-child(2) { width: 22%; }
+  .sd-table th:nth-child(3), .sd-table td:nth-child(3),
+  .sd-table th:nth-child(4), .sd-table td:nth-child(4) { width: 26%; }
+  .sd-table th:nth-child(5), .sd-table td:nth-child(5) { display: none; }
 }
 
 @media (max-width: 540px) {
