@@ -1,0 +1,64 @@
+/* Shared mobile corrections for the project deliverables. */
+@media (max-width: 700px) {
+  html, body { max-width: 100%; overflow-x: hidden; }
+
+  header.pm-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    flex-wrap: nowrap;
+    align-items: start;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .pm-title h1 { font-size: 1.3rem; }
+  .pm-title .subtitle { font-size: 0.76rem; }
+  .pm-title .course { font-size: 0.58rem; margin-top: 4px; }
+  header.pm-header > div[style] {
+    width: auto;
+    max-width: 132px;
+    align-items: flex-end !important;
+    margin-left: auto !important;
+    flex-shrink: 0;
+  }
+  .pm-sutd-logo { height: 32px; max-width: 132px; margin-left: 0 !important; }
+  .pm-instructor { display: none; }
+
+  .title-bar { padding: 8px 12px; flex-wrap: nowrap; align-items: flex-start; }
+  .title-bar h1 { font-size: 0.78rem; line-height: 1.25; }
+  .course-info { display: none; }
+  .legend { gap: 8px; flex-shrink: 0; font-size: 0.6rem; }
+
+  /* Bottom-fixed navigation blocks page controls on small screens. */
+  .nav-prev-btn, .nav-next-btn {
+    position: static !important;
+    display: inline-flex !important;
+    margin: 20px 0 0 16px !important;
+    padding: 9px 14px !important;
+  }
+  .nav-prev-btn + .nav-next-btn { margin-left: 8px !important; }
+
+  .panel-left, .panel-right { max-height: none; overflow: visible; }
+  .info-bar { width: 100%; justify-content: space-between; gap: 8px; }
+
+  .oa-param-table { table-layout: fixed; font-size: 0.7rem; }
+  .oa-param-table th, .oa-param-table td { padding: 7px 8px; overflow-wrap: anywhere; }
+  .oa-stats[style] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .oa-paired-figure { flex-direction: column !important; gap: 12px !important; }
+  .oa-paired-figure > div { width: 100% !important; flex: 1 1 auto !important; }
+  .oa-figure img { max-width: 100% !important; }
+}
+
+@media (max-width: 540px) {
+  .idx-tree { font-size: 0.75rem; }
+  .idx-gutter { padding: 10px 0 10px 12px; gap: 5px; }
+  .idx-row-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2px 8px;
+    padding: 10px 8px;
+  }
+  .idx-row-folder { grid-column: 1 / -1; font-size: 0.64rem; overflow: hidden; text-overflow: ellipsis; }
+  .idx-row-name { font-size: 0.77rem; }
+  .idx-row-file { margin-left: 0; font-size: 0.62rem; }
+  .idx-row-arrow { margin-left: 6px; padding-right: 10px; }
+}
