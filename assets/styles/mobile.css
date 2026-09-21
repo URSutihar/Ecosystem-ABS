@@ -26,22 +26,23 @@
   .pm-sutd-logo { height: 32px; max-width: 132px; margin-left: 0 !important; }
   #team-strip, .pm-instructor { display: none !important; }
 
-  /* Keep page identity and simulator controls reachable while scrolling. */
-  header.pm-header, .title-bar {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    z-index: 9000;
-    background: var(--bg, #0a0e14);
-    box-shadow: 0 8px 14px rgba(10,14,20,0.92);
-  }
+  /* Headers stay in document flow: iPhone Chrome can otherwise cover content
+     while a sticky bar changes between its normal and stuck positions. */
   header.pm-header { padding-top: 12px; padding-bottom: 12px; }
 
-  .title-bar { padding: 8px 12px; flex-wrap: nowrap; align-items: flex-start; }
+  .title-bar { padding: 8px 128px 8px 12px; flex-wrap: nowrap; align-items: flex-start; }
   .title-bar h1 { font-size: 0.78rem; line-height: 1.25; }
   .course-info { display: none; }
   .legend { display: none; }
-  .config-toggle { display: inline-flex; }
+  /* Only control stays pinned, so simulator settings remain reachable. */
+  .config-toggle {
+    position: fixed;
+    top: max(8px, env(safe-area-inset-top));
+    right: 12px;
+    z-index: 9100;
+    display: inline-flex;
+    white-space: nowrap;
+  }
 
   /* Keep navigation in reach without hiding final page content. */
   .nav-prev-btn, .nav-next-btn {
