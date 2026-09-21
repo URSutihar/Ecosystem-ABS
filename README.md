@@ -15,7 +15,7 @@ The model tests how each strategy performs when ecosystems face environmental sh
 
 ## Start Here
 
-Open **`index.html`** in a modern browser, or visit the deployed site @ [Ecosystem ABS](https://abs.sutihar.com). It is the project home page and lists every section in order.
+Open **`index.html`** in a modern browser, or visit the deployed site: [Ecosystem ABS](https://ecosystem-abs.vercel.app). It is the project home page and lists every section in order.
 
 To move through the project:
 
