@@ -15,7 +15,7 @@ The model tests how each strategy performs when ecosystems face environmental sh
 
 ## Start Here
 
-Open **`index.html`** in a modern browser, or visit the deployed site. It is the project home page and lists every section in order.
+Open **`index.html`** in a modern browser, or visit the deployed site @ [Ecosystem ABS](https://abs.sutihar.com). It is the project home page and lists every section in order.
 
 To move through the project:
 
@@ -39,16 +39,3 @@ An internet connection is required for the YouTube video and external charting l
 | 7 | UI, Visualization, and Animation | Live interactive ecosystem simulation. |
 | 8 | Output Analysis | Simulation findings, Lotka–Volterra dynamics, and Monte Carlo analysis. |
 | 9 | Promo Video | Embedded overview video. |
-
-## For Technical Users
-
-This is a static HTML, CSS, and JavaScript project. No build step or backend is required.
-
-- Open `index.html` directly, or serve repository root with a static file server.
-- Simulation code lives in `7_User Interface Visualization and Animation/lib/`.
-- Model design data and rendering helpers live in the `4_`, `5_`, and `6_` section folders.
-- The simulation uses a seeded Mulberry32 pseudorandom number generator, so a run is reproducible when given identical inputs and seed.
-- Section 7 loads [D3 v7](https://d3js.org/) and [Plotly 2.27](https://plotly.com/javascript/) from CDNs.
-- The video page uses YouTube embed `8UI1SmC0qhY`; each page preloads the YouTube player to reduce delay when Section 9 opens.
-
-The original MP4 remains local in `9_Promo Video/` and is intentionally excluded from GitHub. The deployed experience uses the YouTube embed instead.
